@@ -4,9 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import me.elamranioussama.eventsourcingcqrsaxon.command.AccountStatus;
 import me.elamranioussama.eventsourcingcqrsaxon.command.commands.AddAccountCommand;
 import me.elamranioussama.eventsourcingcqrsaxon.command.commands.CreditAccountCommand;
+import me.elamranioussama.eventsourcingcqrsaxon.command.commands.DebitAccountCommand;
 import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountActivatedEvent;
 import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountCreatedEvent;
 import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountCreditedEvent;
+import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountDebitEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -56,6 +58,20 @@ public class AccountAggregate {
         ));
     }
 
+    @CommandHandler
+    public void debitHandler(DebitAccountCommand command) {
+        log.info("------------------------ DebitAccount Received ---------------------");
+        if (!accountStatus.equals(AccountStatus.ACTIVATED)) throw new RuntimeException("Account should Bed Activated");
+        if (command.getAmount() <= 0) throw new IllegalArgumentException("Balance must be positive");
+        if (balance < command.getAmount()) throw new RuntimeException("Balance not sufficient");
+
+        AggregateLifecycle.apply(new AccountDebitEvent(
+                command.getId(),
+                command.getAmount(),
+                command.getCurrency()
+        ));
+    }
+
     @EventSourcingHandler
     public void onCreate(AccountCreatedEvent event) {
         log.info("------------------------ AccountCreatedEvent ---------------------");
@@ -70,6 +86,13 @@ public class AccountAggregate {
         log.info("------------------------ AccountCreditedEvent ---------------------");
         this.accountId = event.getAccountId();
         this.balance += event.getAmount();
+    }
+
+    @EventSourcingHandler
+    public void onDebit(AccountDebitEvent event) {
+        log.info("------------------------ AccountDebitEvent ---------------------");
+        this.accountId = event.getAccountId();
+        this.balance -= event.getAmount();
     }
 
     @EventSourcingHandler

@@ -2,8 +2,10 @@ package me.elamranioussama.eventsourcingcqrsaxon.command.controllers;
 
 import me.elamranioussama.eventsourcingcqrsaxon.command.commands.AddAccountCommand;
 import me.elamranioussama.eventsourcingcqrsaxon.command.commands.CreditAccountCommand;
+import me.elamranioussama.eventsourcingcqrsaxon.command.commands.DebitAccountCommand;
 import me.elamranioussama.eventsourcingcqrsaxon.command.dtos.AddNewRequestDTO;
 import me.elamranioussama.eventsourcingcqrsaxon.command.dtos.CreditAccountRequestDto;
+import me.elamranioussama.eventsourcingcqrsaxon.command.dtos.DebitAccountRequestDto;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventsourcing.eventstore.EventStore;
@@ -49,6 +51,20 @@ public class AccountCommandController {
 
         return response;
     }
+
+    @PostMapping("/debit")
+    public CompletableFuture<String> debitAccount(@RequestBody DebitAccountRequestDto request) {
+        CompletableFuture<String> response = commandGateway.send(
+                new DebitAccountCommand(
+                        request.accountId(),
+                        request.amount(),
+                        request.currency()
+                )
+        );
+
+        return response;
+    }
+
     @ExceptionHandler(Exception.class)
     public String exceptionHandler(Exception exception) {
         return exception.getMessage();
