@@ -24,11 +24,19 @@ public class AccountAggregate {
     public AccountAggregate(AddAccountCommand command) {
         log.info("------------------------ AddAccountCommand Received ---------------------");
         if (command.getInitialBalance() <= 0) throw new IllegalArgumentException("Balance must be positive");
+
+        // Creation
         AggregateLifecycle.apply(new AccountCreatedEvent(
                 command.getId(),
                 command.getInitialBalance(),
                 AccountStatus.CREATED,
                 command.getCurrency()
+        ));
+
+        // Activation
+        AggregateLifecycle.apply(new AccountActivatedEvent(
+                command.getId(),
+                AccountStatus.ACTIVATED
         ));
     }
 
@@ -38,5 +46,20 @@ public class AccountAggregate {
         this.accountId = event.getAccountId();
         this.balance = event.getInitialBalance();
         this.accountStatus = event.getAccountStatus();
+    }
+
+
+    @EventSourcingHandler
+    public void onCredit(AccountCreditedEvent event) {
+        log.info("------------------------ AccountCreditedEvent ---------------------");
+        this.accountId = event.getAccountId();
+        this.balance += event.getAmount();
+    }
+
+    @EventSourcingHandler
+    public void onActivate(AccountActivatedEvent event) {
+        log.info("------------------------ AccountActivatedEvent ---------------------");
+        this.accountId = event.getAccountId();
+        this.accountStatus = event.getStatus();
     }
 }
