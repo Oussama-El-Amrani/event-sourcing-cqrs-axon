@@ -3,7 +3,10 @@ package me.elamranioussama.eventsourcingcqrsaxon.command.aggregates;
 import lombok.extern.slf4j.Slf4j;
 import me.elamranioussama.eventsourcingcqrsaxon.command.AccountStatus;
 import me.elamranioussama.eventsourcingcqrsaxon.command.commands.AddAccountCommand;
+import me.elamranioussama.eventsourcingcqrsaxon.command.commands.CreditAccountCommand;
+import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountActivatedEvent;
 import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountCreatedEvent;
+import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountCreditedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -40,8 +43,21 @@ public class AccountAggregate {
         ));
     }
 
+    @CommandHandler
+    public void creditHandler(CreditAccountCommand command) {
+        log.info("------------------------ CreditAccount Received ---------------------");
+        if (!accountStatus.equals(AccountStatus.ACTIVATED)) throw new RuntimeException("Account should Bed Activated");
+        if (command.getAmount() <= 0) throw new IllegalArgumentException("Balance must be positive");
+
+        AggregateLifecycle.apply(new AccountCreditedEvent(
+                command.getId(),
+                command.getAmount(),
+                command.getCurrency()
+        ));
+    }
+
     @EventSourcingHandler
-    public void on(AccountCreatedEvent event) {
+    public void onCreate(AccountCreatedEvent event) {
         log.info("------------------------ AccountCreatedEvent ---------------------");
         this.accountId = event.getAccountId();
         this.balance = event.getInitialBalance();

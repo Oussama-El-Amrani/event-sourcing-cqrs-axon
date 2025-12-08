@@ -10,4 +10,5 @@ public class AccountCreatedEvent {
     private double initialBalance;
     private AccountStatus accountStatus;
     private String currency;
+
 }
