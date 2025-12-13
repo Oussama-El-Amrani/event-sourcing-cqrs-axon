@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import me.elamranioussama.eventsourcingcqrsaxon.enums.OperationType;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -16,7 +17,7 @@ public class AccountOperation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date date;
+    private Instant date;
     private double amount;
     private OperationType type;
     private String currency;
