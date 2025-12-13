@@ -1,14 +1,14 @@
 package me.elamranioussama.eventsourcingcqrsaxon.command.aggregates;
 
 import lombok.extern.slf4j.Slf4j;
-import me.elamranioussama.eventsourcingcqrsaxon.command.AccountStatus;
+import me.elamranioussama.eventsourcingcqrsaxon.enums.AccountStatus;
 import me.elamranioussama.eventsourcingcqrsaxon.command.commands.AddAccountCommand;
 import me.elamranioussama.eventsourcingcqrsaxon.command.commands.CreditAccountCommand;
 import me.elamranioussama.eventsourcingcqrsaxon.command.commands.DebitAccountCommand;
-import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountActivatedEvent;
-import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountCreatedEvent;
-import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountCreditedEvent;
-import me.elamranioussama.eventsourcingcqrsaxon.command.events.AccountDebitEvent;
+import me.elamranioussama.eventsourcingcqrsaxon.events.AccountActivatedEvent;
+import me.elamranioussama.eventsourcingcqrsaxon.events.AccountCreatedEvent;
+import me.elamranioussama.eventsourcingcqrsaxon.events.AccountCreditedEvent;
+import me.elamranioussama.eventsourcingcqrsaxon.events.AccountDebitEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;

@@ -1,4 +1,4 @@
-package me.elamranioussama.eventsourcingcqrsaxon.command;
+package me.elamranioussama.eventsourcingcqrsaxon.enums;
 
 public enum AccountStatus {
     CREATED, SUSPENDED, ACTIVATED, BLOCKED
