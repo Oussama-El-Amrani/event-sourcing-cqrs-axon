@@ -1,8 +1,8 @@
-package me.elamranioussama.eventsourcingcqrsaxon.command.events;
+package me.elamranioussama.eventsourcingcqrsaxon.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.elamranioussama.eventsourcingcqrsaxon.command.AccountStatus;
+import me.elamranioussama.eventsourcingcqrsaxon.enums.AccountStatus;
 
 @Getter @AllArgsConstructor
 public class AccountCreatedEvent {

@@ -1,4 +1,4 @@
-package me.elamranioussama.eventsourcingcqrsaxon.command.events;
+package me.elamranioussama.eventsourcingcqrsaxon.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

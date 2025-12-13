@@ -1,8 +1,7 @@
-package me.elamranioussama.eventsourcingcqrsaxon.command.events;
+package me.elamranioussama.eventsourcingcqrsaxon.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.elamranioussama.eventsourcingcqrsaxon.command.AccountStatus;
 
 @Getter @AllArgsConstructor
 public class AccountCreditedEvent {
