@@ -3,7 +3,9 @@ package me.elamranioussama.eventsourcingcqrsaxon.query.handlers;
 import me.elamranioussama.eventsourcingcqrsaxon.query.dtos.AccountStatementResponseDTO;
 import me.elamranioussama.eventsourcingcqrsaxon.query.entities.Account;
 import me.elamranioussama.eventsourcingcqrsaxon.query.entities.AccountOperation;
+import me.elamranioussama.eventsourcingcqrsaxon.query.queries.GetAccountStatement;
 import me.elamranioussama.eventsourcingcqrsaxon.query.queries.GetAllAccountsQuery;
+import me.elamranioussama.eventsourcingcqrsaxon.query.queries.WatchEventQuery;
 import me.elamranioussama.eventsourcingcqrsaxon.query.repositories.AccountRepository;
 import me.elamranioussama.eventsourcingcqrsaxon.query.repositories.OperationRepository;
 import org.axonframework.queryhandling.QueryHandler;
@@ -33,5 +35,10 @@ public class AccountQueryHandler {
 
         List<AccountOperation> operations = operationRepository.findByAccountId(account.getId());
         return new AccountStatementResponseDTO(account, operations);
+    }
+
+    @QueryHandler
+    public AccountOperation on(WatchEventQuery query) {
+        return AccountOperation.builder().build();
     }
 }

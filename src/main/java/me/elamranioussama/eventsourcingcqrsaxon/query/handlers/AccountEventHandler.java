@@ -12,6 +12,7 @@ import me.elamranioussama.eventsourcingcqrsaxon.query.repositories.AccountReposi
 import me.elamranioussama.eventsourcingcqrsaxon.query.repositories.OperationRepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.eventhandling.EventMessage;
+import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -19,10 +20,14 @@ import org.springframework.stereotype.Component;
 public class AccountEventHandler {
     private final AccountRepository accountRepository;
     private final OperationRepository operationRepository;
+    private final QueryUpdateEmitter queryUpdateEmitter;
 
-    public AccountEventHandler(AccountRepository accountRepository, OperationRepository operationRepository) {
+    public AccountEventHandler(AccountRepository accountRepository,
+                               OperationRepository operationRepository,
+                               QueryUpdateEmitter queryUpdateEmitter) {
         this.accountRepository = accountRepository;
         this.operationRepository = operationRepository;
+        this.queryUpdateEmitter = queryUpdateEmitter;
     }
 
     @EventHandler
@@ -65,6 +70,9 @@ public class AccountEventHandler {
             operationRepository.save(accountOperation);
 
             account.setBalance(account.getBalance() - accountOperation.getAmount());
+            accountRepository.save(account);
+
+            queryUpdateEmitter.emit(e -> true, accountOperation);
         }
     }
 
@@ -84,6 +92,9 @@ public class AccountEventHandler {
             operationRepository.save(accountOperation);
 
             account.setBalance(account.getBalance() + accountOperation.getAmount());
+            accountRepository.save(account);
+
+            queryUpdateEmitter.emit(e -> true, accountOperation);
         }
     }
 }
