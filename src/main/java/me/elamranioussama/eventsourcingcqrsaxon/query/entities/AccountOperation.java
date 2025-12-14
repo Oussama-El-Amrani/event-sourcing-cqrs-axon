@@ -5,7 +5,6 @@ import lombok.*;
 import me.elamranioussama.eventsourcingcqrsaxon.enums.OperationType;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Entity
 @Getter

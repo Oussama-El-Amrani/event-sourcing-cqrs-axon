@@ -1,12 +1,15 @@
 package me.elamranioussama.eventsourcingcqrsaxon.query.controllers;
 
+import me.elamranioussama.eventsourcingcqrsaxon.query.dtos.AccountStatementResponseDTO;
 import me.elamranioussama.eventsourcingcqrsaxon.query.entities.Account;
 import me.elamranioussama.eventsourcingcqrsaxon.query.entities.AccountOperation;
+import me.elamranioussama.eventsourcingcqrsaxon.query.handlers.GetAccountStatement;
 import me.elamranioussama.eventsourcingcqrsaxon.query.queries.GetAllAccountsQuery;
 import org.axonframework.messaging.responsetypes.ResponseType;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,4 +36,13 @@ public class AccountQueryController {
         return response;
     }
 
+    @GetMapping("/accountStatement/{accountId}")
+    public CompletableFuture<AccountStatementResponseDTO> getAccountStatement(@PathVariable String accountId) {
+        CompletableFuture<AccountStatementResponseDTO> response = queryGateway.query(
+                new GetAccountStatement(accountId),
+                ResponseTypes.instanceOf(AccountStatementResponseDTO.class)
+        );
+
+        return response;
+    }
 }
