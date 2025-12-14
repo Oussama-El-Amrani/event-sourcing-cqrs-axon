@@ -1,6 +1,6 @@
 services:
   axonserver:
-    image: 'axoniq/axonserver:4.0.2'
+    image: 'axoniq/axonserver:latest'
     environment:
       - 'AXONIQ_AXONSERVER_STANDALONE=TRUE'
     ports:
